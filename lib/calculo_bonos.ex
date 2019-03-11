@@ -64,7 +64,7 @@ defmodule CalculoBonos do
   Remplaza la propiedad "Nivel" de los mapas
   al numero minimo de goles que corresponda
   """
-  def remp_nivel(nivel_jugador) do
+  defp remp_nivel(nivel_jugador) do
     Enum.map(nivel_jugador, fn j ->
       case j.nivel do
         "A" -> Map.put(j, :nivel, 5)
@@ -82,7 +82,7 @@ defmodule CalculoBonos do
   la variable temporal tomara el valor del nivel,
   en caso contrario tomara el valor de los goles.
   """
-  def crear_vt(var_temp) do
+  defp crear_vt(var_temp) do
     Enum.map(var_temp, fn j ->
       if j.nivel < j.goles do
         Map.put_new(j, :vt, j.nivel)
@@ -95,7 +95,7 @@ defmodule CalculoBonos do
   @doc """
   Se agrupan los mapas segun su equipo
   """
-  def div_equipo(agrupan) do
+  defp div_equipo(agrupan) do
     Enum.sort_by(agrupan, & &1.equipo) |> Enum.chunk_by(& &1.equipo)
   end
 
@@ -103,7 +103,7 @@ defmodule CalculoBonos do
   Se obtienen los goles obtenidos y los goles por equipo
   para realizar el calculo del sueldo completo
   """
-  def sueldo_completo(mapa) do
+  defp sueldo_completo(mapa) do
     Enum.reduce(mapa, [], fn x, acc ->
       goles_por_equipo = Enum.reduce(x, 0, fn y, acc2 -> y.nivel + acc2 end)
       goles_obtenidos = Enum.reduce(x, 0, fn y, acc2 -> y.vt + acc2 end)
@@ -133,7 +133,7 @@ defmodule CalculoBonos do
   @doc """
   Se unen las listas divididas por equipo
   """
-  def unir_listas(lista) do
+  defp unir_listas(lista) do
     Enum.concat(lista)
   end
 
@@ -141,7 +141,7 @@ defmodule CalculoBonos do
   Se vuelve a remplazar la propiedad "Nivel"
   de los mapas a como estaba originalmente
   """
-  def remp_nivel2(nivel_jugador) do
+  defp remp_nivel2(nivel_jugador) do
     Enum.map(nivel_jugador, fn j ->
       case j.nivel do
         5 -> Map.put(j, :nivel, "A")
@@ -155,7 +155,7 @@ defmodule CalculoBonos do
   @doc """
   Se remueve de los mapas la variable temporal
   """
-  def eliminar_vt(var_temp) do
+  defp eliminar_vt(var_temp) do
     Enum.map(var_temp, fn j -> Map.delete(j, :vt) end)
   end
 end
