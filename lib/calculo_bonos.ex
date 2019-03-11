@@ -5,7 +5,7 @@ defmodule CalculoBonos do
   de sus goles obtenidos y su nivel
   """
 
-  def calcular_bonos do
+  def resuelveFc do
     jugadores()
     |> remp_nivel
     |> crear_vt
@@ -64,8 +64,8 @@ defmodule CalculoBonos do
   Remplaza la propiedad "Nivel" de los mapas
   al numero minimo de goles que corresponda
   """
-  def remp_nivel(jugador) do
-    Enum.map(jugador, fn j ->
+  def remp_nivel(nivel_jugador) do
+    Enum.map(nivel_jugador, fn j ->
       case j.nivel do
         "A" -> Map.put(j, :nivel, 5)
         "B" -> Map.put(j, :nivel, 10)
@@ -77,10 +77,13 @@ defmodule CalculoBonos do
 
   @doc """
   Se crea una variable temporal para
-  hacer los calculos del sueldo completo
+  hacer los calculos del sueldo completo.
+  Si el nivel del jugador es menor a los goles
+  la variable temporal tomara el valor del nivel,
+  en caso contrario tomara el valor de los goles.
   """
-  def crear_vt(val1) do
-    Enum.map(val1, fn j ->
+  def crear_vt(var_temp) do
+    Enum.map(var_temp, fn j ->
       if j.nivel < j.goles do
         Map.put_new(j, :vt, j.nivel)
       else
@@ -92,16 +95,16 @@ defmodule CalculoBonos do
   @doc """
   Se agrupan los mapas segun su equipo
   """
-  def div_equipo(val2) do
-    Enum.sort_by(val2, & &1.equipo) |> Enum.chunk_by(& &1.equipo)
+  def div_equipo(agrupan) do
+    Enum.sort_by(agrupan, & &1.equipo) |> Enum.chunk_by(& &1.equipo)
   end
 
   @doc """
   Se obtienen los goles obtenidos y los goles por equipo
   para realizar el calculo del sueldo completo
   """
-  def sueldo_completo(val3) do
-    Enum.reduce(val3, [], fn x, acc ->
+  def sueldo_completo(mapa) do
+    Enum.reduce(mapa, [], fn x, acc ->
       goles_por_equipo = Enum.reduce(x, 0, fn y, acc2 -> y.nivel + acc2 end)
       goles_obtenidos = Enum.reduce(x, 0, fn y, acc2 -> y.vt + acc2 end)
 
@@ -130,16 +133,16 @@ defmodule CalculoBonos do
   @doc """
   Se unen las listas divididas por equipo
   """
-  def unir_listas(val4) do
-    Enum.concat(val4)
+  def unir_listas(lista) do
+    Enum.concat(lista)
   end
 
   @doc """
   Se vuelve a remplazar la propiedad "Nivel"
   de los mapas a como estaba originalmente
   """
-  def remp_nivel2(val5) do
-    Enum.map(val5, fn j ->
+  def remp_nivel2(nivel_jugador) do
+    Enum.map(nivel_jugador, fn j ->
       case j.nivel do
         5 -> Map.put(j, :nivel, "A")
         10 -> Map.put(j, :nivel, "B")
@@ -152,7 +155,7 @@ defmodule CalculoBonos do
   @doc """
   Se remueve de los mapas la variable temporal
   """
-  def eliminar_vt(val6) do
-    Enum.map(val6, fn j -> Map.delete(j, :vt) end)
+  def eliminar_vt(var_temp) do
+    Enum.map(var_temp, fn j -> Map.delete(j, :vt) end)
   end
 end
