@@ -5,7 +5,7 @@ defmodule CalculoBonos do
   de sus goles obtenidos y su nivel
   """
 
-  def resuelveFc do
+  def resuelveFc() do
     jugadores()
     |> remp_nivel
     |> crear_vt
@@ -83,14 +83,11 @@ defmodule CalculoBonos do
   en caso contrario tomara el valor de los goles.
   """
   defp crear_vt(var_temp) do
-    Enum.map(var_temp, fn j ->
-      if j.nivel < j.goles do
-        Map.put_new(j, :vt, j.nivel)
-      else
-        Map.put_new(j, :vt, j.goles)
-      end
-    end)
+    Enum.map(var_temp, fn j -> new(j) end)
   end
+
+  def new(%{goles: gol, nivel: niv} = j) when niv < gol, do: Map.put_new(j, :vt, niv)
+  def new(%{goles: gol, nivel: niv} = j) when niv > gol, do: Map.put_new(j, :vt, gol)
 
   @doc """
   Se agrupan los mapas segun su equipo
